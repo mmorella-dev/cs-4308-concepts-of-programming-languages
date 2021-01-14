@@ -136,6 +136,4 @@ Leftmost deriviation:
 => A = B * (C * (A + B))
 ```
 
-Parse tree:
-
-![]()
+![Parse tree](parse_tree.jpg)
