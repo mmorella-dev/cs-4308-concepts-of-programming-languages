@@ -9,7 +9,7 @@ double computeTrapezoidArea(double base1, double base2, double height) {
   return height * (base1 + base2) / 2;
 }
 
-// Reads and returns a double value from std::cin
+// Reads and returns a double value from std::cin.
 // If the read fails (i.e. the input is not valid),
 // @throws an integer exception 20.
 double nextDouble() {
