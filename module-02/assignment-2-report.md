@@ -9,14 +9,15 @@ CS 4308 - Concepts of Programming Languages W01
 
 > Explain whether the following grammar is ambiguous:
 >
-  ```text
-  <assign> -> <id> = <expr>
-  <id> -> A | B | C
-  <expr> -> <expr> + <expr>
-      | <expr> * <expr>
-      |  (<expr>)
-      | <id>
-  ```
+>  ```text
+>  <assign> -> <id> = <expr>
+>  <id> -> A | B | C
+>  <expr> -> <expr> + <expr>
+>      | <expr> * <expr>
+>      |  (<expr>)
+>      | <id>
+>  ```
+>
 
 #### Solution 1
 
@@ -32,14 +33,14 @@ If a grammar can produce multiple non-equivalent parse trees from the same state
 
 > Given the following grammar specification, draw the corresponding parse tree and write a leftmost derivation for each of the following statements.
 >
-  ``` text
-  <assign> -> <id> = <expr>
-  <id> -> A | B | C
-  <expr> -> <id> + <expr>
-      | <id> * <expr>
-      |  (<expr>)
-      | <id>
-  ```
+>  ``` text
+>  <assign> -> <id> = <expr>
+>  <id> -> A | B | C
+>  <expr> -> <id> + <expr>
+>      | <id> * <expr>
+>      |  (<expr>)
+>      | <id>
+>  ```
 >
 a. `A = A * (B + (C * A))`
 b. `B = C * (A * C + B)`
@@ -90,7 +91,6 @@ b. `B = C * (A * C + B)`
 ##### Parse tree  of `B = C * (A * C + B)`
 
 ![Fig 4: Parse tree for `B = C * (A * C + B)`](parse-tree-04.png)
-
 
 ### 3. EBNF to BNF
 
