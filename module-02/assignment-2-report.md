@@ -1,11 +1,11 @@
-## Assignment #2
+# Assignment #2
 
 Kennesaw State University<br>
 College of Computing and Software Engineering<br>
 Department of Computer Science<br>
 CS 4308 - Concepts of Programming Languages W01
 
-### 1. Ambiguity of a grammar
+## 1. Ambiguity of a grammar
 
 > Explain whether the following grammar is ambiguous:
 >
@@ -19,7 +19,7 @@ CS 4308 - Concepts of Programming Languages W01
 >  ```
 >
 
-#### Solution 1
+### Solution 1
 
 The given grammar is ambiguous, because it introduces two operators (`*` and `+`) which have equal precedence, and which can be evaluated in multiple orders. For example, the statement `A = B + C * A` has **two or more** distinct parse trees, as shown below:
 
@@ -29,7 +29,7 @@ The given grammar is ambiguous, because it introduces two operators (`*` and `+`
 
 If a grammar can produce multiple non-equivalent parse trees from the same statement, then it is ambiguous.
 
-### 2. Parse trees and leftmost derivations
+## 2. Parse trees and leftmost derivations
 
 > Given the following grammar specification, draw the corresponding parse tree and write a leftmost derivation for each of the following statements.
 >
@@ -42,12 +42,13 @@ If a grammar can produce multiple non-equivalent parse trees from the same state
 >      | <id>
 >  ```
 >
-a. `A = A * (B + (C * A))`
-b. `B = C * (A * C + B)`
+> a. `A = A * (B + (C * A))`
+> b. `B = C * (A * C + B)`
+>
 
-#### Solution 2a
+### Solution 2a
 
-##### Leftmost derivation of `A = A * (B + (C * A))`
+#### Leftmost derivation of `A = A * (B + (C * A))`
 
 ```text
 <assign>
@@ -65,13 +66,13 @@ b. `B = C * (A * C + B)`
 => A = A * ( B + ( C * A ) )
 ```
 
-##### Parse tree of `A = A * (B + (C * A))`
+#### Parse tree of `A = A * (B + (C * A))`
 
 ![Fig 3: Parse tree for `A = A * (B + (C * A))`](parse-tree-03.png)
 
-#### Solution 2b
+### Solution 2b
 
-##### Leftmost derivation of `B = C * (A * C + B)`
+#### Leftmost derivation of `B = C * (A * C + B)`
 
 ```text
 <assign>
@@ -88,11 +89,11 @@ b. `B = C * (A * C + B)`
 => B = C * ( A * C + B )
 ```
 
-##### Parse tree  of `B = C * (A * C + B)`
+#### Parse tree  of `B = C * (A * C + B)`
 
 ![Fig 4: Parse tree for `B = C * (A * C + B)`](parse-tree-04.png)
 
-### 3. EBNF to BNF
+## 3. EBNF to BNF
 
 > Convert the following grammar specification to BNF:
 >
@@ -101,7 +102,7 @@ b. `B = C * (A * C + B)`
   <A> -> a[b]<A>
   ```
 
-#### Solution 3
+### Solution 3
 
 ```text
 <S> -> <A> b<S>
@@ -110,18 +111,18 @@ b. `B = C * (A * C + B)`
      | ab<A>
 ```
 
-### Problem 4: Grammar specification
+## Problem 4: Grammar specification
 
 > A language consists of strings that have $n$ copies of the letter "a" followed by the same number of copies of the letter "b", where $n > 0$. Define the grammar specification for the language.
 
-#### Solution 4
+### Solution 4
 
 ```text
 <S> -> a<S>b
      | ab
 ```
 
-### 5. Validating sentences
+## 5. Validating sentences
 
 > Using the following grammar:
 >
@@ -138,7 +139,7 @@ b. `B = C * (A * C + B)`
   c.	bbaaaaaS
   d.	bbaab
 
-#### Solution 5a ("baab")
+### Solution 5a ("baab")
 
 "baab" **is a valid sentence**, as shown by the leftmost derivation:
 
@@ -149,7 +150,7 @@ b. `B = C * (A * C + B)`
 => b a a b
 ```
 
-#### Solution 5b ("bbbab")
+### Solution 5b ("bbbab")
 
 "bbbab" **is not a valid sentence**. The below leftmost derivation shows a failed attempt to derive it.
 
@@ -165,11 +166,11 @@ b. `B = C * (A * C + B)`
 
 Because the first rule contains `a <B>`, and `<B>` derives to at least one instance of `a`, it is not possible to have a string with only a lone instance of `a`.
 
-#### Solution 5c ("bbaaaaaS")
+### Solution 5c ("bbaaaaaS")
 
 "bbaaaaaS" **is not a valid sentence**. While the language defines an identifer `<S>` "S" is not a valid lexeme in this language.
 
-#### Solution 5d ("bbaab")
+### Solution 5d ("bbaab")
 
 "bbaab" **is a valid sentence**, as shown by the following leftmost derivation:
 
