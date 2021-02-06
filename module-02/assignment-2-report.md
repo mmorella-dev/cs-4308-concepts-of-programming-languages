@@ -21,7 +21,7 @@ CS 4308 - Concepts of Programming Languages W01
 
 #### Solution 1
 
-The given grammar is ambiguous, because it introduces two operators (`*` and `+`) which have equal precedence, and which can be evaluated in multiple orders. For example, the statement `A = B + C * A` has two distinct parse trees, as shown below:
+The given grammar is ambiguous, because it introduces two operators (`*` and `+`) which have equal precedence, and which can be evaluated in multiple orders. For example, the statement `A = B + C * A` has **two or more** distinct parse trees, as shown below:
 
 ![Fig. 1: A parse tree in which the + operator takes precedence`](parse-tree-01.png)
 
