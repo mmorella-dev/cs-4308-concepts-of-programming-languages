@@ -17,15 +17,15 @@ void yyerror(const char* c);
     Implemented as a pre-processor that generates C programs
 
     Nov. 2018. Revised specified with Flex and Bison, Jan 2019
-	Updated to define Hex values
+        Updated to define Hex values
 
-	Jose Garrido
+        Jose Garrido
     Department of Computer Science
-	College of Computing and Software Engineering
+        College of Computing and Software Engineering
     Kennessaw State University
 
-	Note:
-	The grammar is written in a slightly modified BNF notation (written for Bison/Yacc)
+        Note:
+        The grammar is written in a slightly modified BNF notation (written for Bison/Yacc)
     The ':' is the same as the right arrow in BNF
     Every rule ends with a semicolon.
     The non-terminals are written in upper-case.
@@ -148,7 +148,7 @@ spec_def : ENUM
          | DESCRIPTION
          ;
 globals :
-        | GLOBAL  DECLARATIONS const_dec var_dec struct_dec
+        | GLOBAL DECLARATIONS const_dec var_dec struct_dec
         ;
 const_var_struct : const_dec var_dec struct_dec
                  ;
@@ -162,7 +162,7 @@ struct_dec :
            ;
 data_declarations : comp_declare
                   | data_declarations comp_declare
-				  ;
+                  ;
 comp_declare : DEFINE data_file
              ;
 data_file : sel_file
@@ -184,30 +184,30 @@ opt_pointer :
             ;
 data_type : TUNSIGNED
           | CHAR
-		  | INTEGER
-		  | MVOID
-		  | DOUBLE
-		  | LONG
-		  | SHORT
-		  | FLOAT
-		  | REAL
-		  | TSTRING
-		  | TBOOL
-		  | TBYTE
-		  ;
+          | INTEGER
+          | MVOID
+          | DOUBLE
+          | LONG
+          | SHORT
+          | FLOAT
+          | REAL
+          | TSTRING
+          | TBOOL
+          | TBYTE
+          ;
 parray_dec :
           | ARRAY plist_const popt_array_val
-		  | '['
-		  | VALUE
-		  | EQUOP
-		  ;
+          | '['
+          | VALUE
+          | EQUOP
+          ;
 plist_const : '[' iconst_ident ']'
             | plist_const '[' iconst_ident ']'
             ;
 iconst_ident : SIGNICON
              | UNSIGNICON
              | IDENTIFIER
-			 ;
+             ;
 popt_array_val :
                | value_eq array_val
                ;
@@ -221,7 +221,7 @@ simp_arr_val : '[' arg_list ']'
              ;
 arg_list : expr
          | arg_list ',' expr
-		 ;
+         ;
 
 
 implement : IMPLEMENTATIONS main_head funct_list
@@ -236,8 +236,8 @@ funct_body: FUNCTION phead_fun pother_oper_def
           ;
 phead_fun :
           | PERSISTENT
-	      | STATIC
-	      ;
+              | STATIC
+              ;
 pother_oper_def : pother_oper IS const_var_struct precond
                       PBEGIN pactions  ENDFUN  IDENTIFIER
                 ;
@@ -247,29 +247,26 @@ pother_oper : IDENTIFIER DESCRIPTION oper_type parameters
 
 precond :
         | PRECONDITION pcondition
-		;
+        ;
 pcondition : pcond1 '|' '|' pcond1
            | pcond1 '&' '&' pcond1
-		   | pcond1
-		   ;
+           | pcond1
+           ;
 pcond1 : '!' pcond2
        | pcond2
        ;
 pcond2 : '(' pcondition ')'
        | expr '!' '=' expr
        | expr '=' '=' expr
-        | expr '<' expr
-        | expr '>' expr
-        | expr '>' '=' expr
-        | expr '<' '=' expr
-        | element
-        ;
+       | expr '<' expr
+       | expr '>' expr
+       | expr '>' '=' expr
+       | expr '<' '=' expr
+       | element
+       ;
 true_false : MTRUE
            | MFALSE
            ;
-opt_not :
-        | NOT
-        ;
 
 parameters :
            | PARAMETERS  param_list
@@ -288,33 +285,32 @@ param_mode :
            ;
 expr : term '+' term
      | term '-' term
-	 | term '&' term
-	 | term '|' term
-	 | term '^' term
-	 ;
+         | term '&' term
+         | term '|' term
+         | term '^' term
+         ;
 term : punary
      | punary '*' punary
      | punary '/' punary
      | punary '%' punary
-	 | punary '<' '<' punary
-	 | punary '>' '>' punary
-	 ;
+         | punary '<' '<' punary
+         | punary '>' '>' punary
+         ;
 punary : element
        | '&' element
        | '*' element
        | '-' element
        ;
 element : IDENTIFIER popt_ref
-	    | STRING
-                | LETTER
-                | SIGNICON
-                | UNSIGNICON
-                | HCON
-                | FCON
-                | MTRUE
-                | MFALSE
-		| '(' expr ')'
-		;
+            | STRING
+            | LETTER
+            | SIGNICON
+            | UNSIGNICON
+            | HCON
+            | FCON
+            | true_false
+            | '(' expr ')'
+            ;
 pactions : action_def
          | pactions action_def
          ;
@@ -328,26 +324,26 @@ action_def : ADD name_ref TO name_ref
            | MCLOSE IDENTIFIER
            | MOPEN in_out
            | MFILE read_write
-		   | INCREMENT name_ref
-		   | DECREMENT name_ref
-		   | RETURN expr
-		   | CALL name_ref pusing_ref
-		   | IF pcondition THEN pactions ptest_elsif
-		          opt_else ENDIF
-		   | FOR name_ref EQUOP expr downto expr
-		          DO pactions ENDFOR
-		   | REPEAT pactions UNTIL pcondition ENDREPEAT
-		   | WHILE pcondition DO pactions ENDWHILE
-		   | CASE name_ref pcase_val pcase_def MENDCASE
-		   | MBREAK
-		   | MEXIT
-		   | ENDFUN name_ref
-		   | POSTCONDITION pcondition
-		   ;
+                   | INCREMENT name_ref
+                   | DECREMENT name_ref
+                   | RETURN expr
+                   | CALL name_ref pusing_ref
+                   | IF pcondition THEN pactions ptest_elsif
+                          opt_else ENDIF
+                   | FOR name_ref EQUOP expr downto expr
+                          DO pactions ENDFOR
+                   | REPEAT pactions UNTIL pcondition ENDREPEAT
+                   | WHILE pcondition DO pactions ENDWHILE
+                   | CASE name_ref pcase_val pcase_def MENDCASE
+                   | MBREAK
+                   | MEXIT
+                   | ENDFUN name_ref
+                   | POSTCONDITION pcondition
+                   ;
 
 ptest_elsif :
             | proc_elseif
-			;
+                        ;
 proc_elseif : ELSEIF pcondition THEN pactions
             | proc_elseif ELSEIF pcondition THEN pactions
             ;
@@ -357,7 +353,7 @@ downto : TO
 pusing_ref :
            | USING arg_list
            | parguments
-		   ;
+                   ;
 parguments : '(' arg_list ')'
            ;
 
@@ -377,25 +373,25 @@ opt_else :
 
 in_out : INPUT MFILE IDENTIFIER
        | OUTPUT MFILE IDENTIFIER
-	   ;
+           ;
 read_write : READ pvar_value_list FROM IDENTIFIER
            | WRITE pvar_value_list TO IDENTIFIER
-		   ;
+                   ;
 name_ref : IDENTIFIER opt_ref pmember_opt  popt_dot
          ;
 pmember_opt :
             | pmember_of
             ;
 pmember_of : OF IDENTIFIER opt_ref
-		   | pmember_of OF IDENTIFIER opt_ref
+                   | pmember_of OF IDENTIFIER opt_ref
            ;
 
 opt_ref : array_val
         ;
 popt_ref :
          | array_val
-	 | parguments
-	 ;
+         | parguments
+         ;
 popt_dot :
          | proc_dot
          ;

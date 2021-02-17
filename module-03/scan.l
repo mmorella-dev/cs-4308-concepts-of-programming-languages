@@ -1,11 +1,12 @@
+%option bison-bridge
+%option noyywrap
+
 %{
 #include "stdio.h"
 #include "y.tab.h"
 #include "stdlib.h"
 %}
 
-%option bison-bridge
-%option noyywrap
 /* DECLARATIONS */
 
 DIGIT [0-9]
@@ -148,11 +149,5 @@ write           return WRITE;
 %%
 
 void yyerror(const char *c) {
-        fprintf(stderr, "Error: %s", c);
-}
-
-void yyparse();
-
-int main() {
-        yyparse();
+        fprintf(stderr, "Error: %s\n", c);
 }
