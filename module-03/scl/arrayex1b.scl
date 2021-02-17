@@ -1,21 +1,17 @@
 import "scl.h"
-description
- Program: arrayex1.scl
-  Computes the maximum value in an array.
-  J Garrido Updated 1-7-2018
-*/ 
+
 symbol MM 45
 symbol NHG 4524h
 symbol MYHV 0ACDFh
 symbol MYSHV 0F5h
 
 forward declarations
-function max_array return type integer 
- parameters 
-       a array [] of type integer, 
+function max_array return type integer
+ parameters
+       a array [] of type integer,
        num_elements of type integer
 
-  
+
 specifications
 
 enumerate week is
@@ -36,14 +32,14 @@ constants
    define ARRAY_SIZE = 50 of type integer
 variables
    define varm2 array[MM] of type float
-   define var3 = 2154.55e05 of type double 
-   
-structures 
+   define var3 = 2154.55e05 of type double
+
+structures
    define strname of struct stname
    define var6 of enum week
 
 implementations
- 
+
 description
   This program computes the maximum value in an array */
   function main is
@@ -60,25 +56,25 @@ description
       set myihvar = MYHV
       set mybhvar = MYSHV
       set mybhvar = (mybhvar lshift 2)
-      input "Number of elements to process: ", kelements      
+      input "Number of elements to process: ", kelements
       for j = 0 to kelements -1 do
-         input "Enter element int value: " , marray [j] 
+         input "Enter element int value: " , marray [j]
       endfor
-      set max_val = max_array(marray, kelements)      
+      set max_val = max_array(marray, kelements)
       display "Max Integer found: ", max_val
 	  set xc = strname.xcoord
 	  display "xc: ", xc
       exit
-  endfun main 
- 
+  endfun main
+
 description
          The following function definition finds the maximum value
           in an integer array. To invoke the function, two arguments
-          are used: the integer array and the current number of 
+          are used: the integer array and the current number of
           elements in the array.
 */
   function  max_array return type integer
-   parameters 
+   parameters
        a array[] of type integer,
        num_elements of type integer
    is
@@ -102,4 +98,4 @@ description
        return max_elem
   endfun max_array
 
- 
+
