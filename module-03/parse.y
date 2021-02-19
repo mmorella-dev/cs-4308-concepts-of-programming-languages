@@ -1,40 +1,18 @@
 %{
 
-
-
 #if YYBISON
 union YYSTYPE;
 int yylex();
 void yyerror(const char* c);
 #endif
+
 %}
 
-
-
-/*
-   SCL A System Programming Language
-     for the low-level programming
-    Implemented as a pre-processor that generates C programs
-
-    Nov. 2018. Revised specified with Flex and Bison, Jan 2019
-        Updated to define Hex values
-
-        Jose Garrido
-    Department of Computer Science
-        College of Computing and Software Engineering
-    Kennessaw State University
-
-        Note:
-        The grammar is written in a slightly modified BNF notation (written for Bison/Yacc)
-    The ':' is the same as the right arrow in BNF
-    Every rule ends with a semicolon.
-    The non-terminals are written in upper-case.
-*/
 
 %union {
   int number;
   double real;
-  char *string;
+  char string[256];
 }
 
 /* Keywords */
@@ -46,10 +24,10 @@ void yyerror(const char* c);
 %token <real> FCON
 
 /* Operators */
-%token AND BAND BOR BXOR DEREF DIVOP EQUALS EQUOP GREATERT GREATERT_OR_EQUAL LESST LESST_OR_EQUAL LSHIFT MINUS MOD NEGATE NOT OR PLUS RELOP RSHIFT STAR
-
 
 %token <string> IDENTIFIER LETTER
+
+%token-table
 
 %start start
 
@@ -199,7 +177,7 @@ parray_dec :
           | ARRAY plist_const popt_array_val
           | '['
           | VALUE
-          | EQUOP
+          | '='
           ;
 plist_const : '[' iconst_ident ']'
             | plist_const '[' iconst_ident ']'
@@ -212,7 +190,7 @@ popt_array_val :
                | value_eq array_val
                ;
 value_eq : VALUE
-         | EQUOP
+         | '='
          ;
 
 array_val : simp_arr_val
@@ -316,7 +294,7 @@ pactions : action_def
          ;
 action_def : ADD name_ref TO name_ref
            | SUBTRACT name_ref FROM name_ref
-           | SET name_ref EQUOP expr
+           | SET name_ref '=' expr
            | READ pvar_value_list
            | INPUT name_ref
            | DISPLAY pvar_value_list
@@ -330,7 +308,7 @@ action_def : ADD name_ref TO name_ref
                    | CALL name_ref pusing_ref
                    | IF pcondition THEN pactions ptest_elsif
                           opt_else ENDIF
-                   | FOR name_ref EQUOP expr downto expr
+                   | FOR name_ref '=' expr downto expr
                           DO pactions ENDFOR
                    | REPEAT pactions UNTIL pcondition ENDREPEAT
                    | WHILE pcondition DO pactions ENDWHILE
@@ -401,5 +379,3 @@ proc_dot : '.' IDENTIFIER opt_ref
 
 %%
 
-int yylex();
-void yyerror(const char *c);

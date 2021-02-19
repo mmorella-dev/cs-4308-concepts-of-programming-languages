@@ -1,5 +1,6 @@
-%option bison-bridge
+/* %option bison-bridge */
 %option noyywrap
+%option yylineno
 
 %{
 #include "stdio.h"
@@ -17,6 +18,9 @@ IDENT [0-9a-zA-Z_]
 STRING \"(\\.|[^"])*\"
 
 %%
+
+["<>\[\]\\/\(\)+\-=\.] return (int)yytext[0];
+
 add return ADD;
 alters return ALTERS;
 array return ARRAY;
@@ -81,22 +85,22 @@ pointer return POINTER;
 postcondition return POSTCONDITION;
 precondition return PRECONDITION;
 preserves return PRESERVES;
-produces return PRODUCES;
-read return READ;
-real return REAL;
-repeat return REPEAT;
+produces        return PRODUCES;
+read            return READ;
+real            return REAL;
+repeat          return REPEAT;
 (return)        return RETURN;
-set return SET;
-shared return SHARED;
-short return SHORT;
-specifications return SPECIFICATIONS;
-static return STATIC;
-struct return STRUCT;
-structype return STRUCTYPE;
-subtract return SUBTRACT;
-symbol return SYMBOL;
-bool           return TBOOL;
-byte           return TBYTE;
+set             return SET;
+shared          return SHARED;
+short           return SHORT;
+specifications  return SPECIFICATIONS;
+static          return STATIC;
+struct          return STRUCT;
+structype       return STRUCTYPE;
+subtract        return SUBTRACT;
+symbol          return SYMBOL;
+bool            return TBOOL;
+byte            return TBYTE;
 then            return THEN;
 to              return TO;
 string          return TSTRING;
@@ -110,35 +114,33 @@ variables       return VARIABLES;
 while           return WHILE;
 write           return WRITE;
 
-\" return '"';
-\< return '<';
-\> return '>';
-
 ({ALPHA}|_){IDENT}* {
-        // strcpy(yylval->string, yytext);
+        strcpy(yylval.string, yytext);
         return IDENTIFIER;
 }
 
 \"(\\.|[^"])*\" {
-        // strcpy(yylval->string, yytext);
-        // yyval.string = yytext;
+        strcpy(yylval.string, yytext);
+        size_t len = strlen(yylval.string);
+        memmove(yylval.string, yylval.string+1, len-2);
+        yylval.string[len-2] = 0;
         return STRING;
 }
 
 {DIGIT}+ {
-        // yyval.number = (int)atoi(yytext);
+        yylval.number = (int)atoi(yytext);
         return UNSIGNICON;
 }
 [+-]{DIGIT}+ {
-//        yyval.number = (int)atoi(yytext);
+       yylval.number = (int)atoi(yytext);
        return SIGNICON;
 }
 [0-9A-F]+h {
-        // yylval.number = strtol(yytext, 0, 16);
+        yylval.number = strtol(yytext, 0, 16);
        return SIGNICON;
 }
 {DIGIT}+\.{DIGIT}? {
-        yylval->real = strtod(yytext, 0);
+        yylval.real = strtod(yytext, 0);
         return FCON;
 }
 
