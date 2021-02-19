@@ -2,8 +2,6 @@
 **.pdf
 **.out
 **.docx
-y.tab.c
-y.tab.h
-lex.yy.c
-parse.c
+y.**.*
+*.yy.*
 **.o
