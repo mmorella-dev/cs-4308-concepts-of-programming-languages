@@ -1,8 +1,8 @@
 # Makefile example -- scanner and parser.
 # Creates "main" from "scan.l", "parse.y", and "main.c"
 #
-LEX     = flex
-YACC    = bison -y
+# LEX     = flex
+# YACC    = bison -y
 YFLAGS  = -d
 objects = scan.yy.o main.o
 
