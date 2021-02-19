@@ -38,7 +38,7 @@ $ sclanner my_scl_file.scl
 
 Requires that you have [Make](https://en.wikipedia.org/wiki/Make_(software)) installed, [Flex](https://en.wikipedia.org/wiki/Flex_(lexical_analyser_generator)), and [Bison](https://en.wikipedia.org/wiki/Yacc)
 
-Clone this repository, and execute `make`. This should generate the `sclanner` binary.
+Clone this repository, and execute `make`. This should generate the binary at `out/sclanner`.
 
 ## License
 

@@ -14,7 +14,7 @@ TARGET = $(OUT_DIR)/sclanner
 objects := $(OUT_DIR)/scan.yy.o $(OUT_DIR)/main.o
 
 $(TARGET): $(objects)
-		$(MKDIR_P )
+		$(MKDIR_P) $(OUT_DIR)
 		$(CC) -o $@ $(objects)
 
 $(SRC_DIR)/y.tab.c: $(SRC_DIR)/parse.y
@@ -26,9 +26,11 @@ $(SRC_DIR)/scan.yy.c: $(SRC_DIR)/scan.l
 		$(LEX) -t --header-file=$(basename $<).yy.h $< > "$@"
 
 $(OUT_DIR)/scan.yy.o: $(SRC_DIR)/scan.yy.c $(SRC_DIR)/y.tab.c
+		$(MKDIR_P) $(dir $@)
 		$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OUT_DIR)/main.o: $(SRC_DIR)/main.c $(SRC_DIR)/y.tab.c
+		$(MKDIR_P) $(dir $@)
 		$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
