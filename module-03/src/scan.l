@@ -1,6 +1,7 @@
 /* %option bison-bridge */
 %option noyywrap
 %option yylineno
+%option caseless
 
 %{
 #include "stdio.h"
