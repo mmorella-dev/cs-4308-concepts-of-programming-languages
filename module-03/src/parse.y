@@ -1,4 +1,12 @@
-
+// FILE: parse.y
+// AUTHOR: Mae Morella
+// ===================
+//
+// This file is input for Yacc/Bison, to generate a parser program.
+// It is currently used only to define y.tab.h, which #defines
+// values for all of the following tokens.
+// It contains a BNF grammar for the SCL language as well, but this grammar
+// has several issues and is not yet ready for use in parsing source files.
 
 /* Keywords */
 %token AND ADD ADDRESS ALTERS ARRAY CALL CASE CHAR CONSTANTS CONSUMES COUNT DECLARATIONS DECREMENT DEFAULT DEFINE DEREF DEFINETYPE DESCRIPTION DISPLAY DISPLAYN DO DOUBLE DOWNTO ELSE ELSEIF ENDFOR ENDFUN ENDIF ENDREPEAT ENDWHILE ENUM EQUAL FLOAT FOR FORWARD FROM FUNCTION GLOBAL GREATERT IF IMPLEMENTATIONS IMPORT INCREMENT INPUT INTEGER INTERFACE IS LENGTH LONG LESST MAIN MBREAK MCLOSE MENDCASE MEXIT MEXTERN MFALSE MFILE MOPEN MTRUE MVOID MWHEN NEGATE NOT OF OR OUTPUT PARAMETERS PBEGIN PERSISTENT POINTER POSTCONDITION PRECONDITION PRESERVES PRODUCES READ REAL REPEAT RETURN SET SHARED SHORT SPECIFICATIONS STATIC STRUCT STRUCTURES STRUCTYPE SUBTRACT SYMBOL TBOOL TBYTE THEN TO TSTRING TUNSIGNED TYPE UNTIL USE USING VALUE VARIABLES WHILE WRITE
@@ -19,27 +27,7 @@
 %token <string> IDENTIFIER LETTER_LITERAL
 
 %%
-// A subset of the SCL grammar:
-
-/*
-   SCL A System Programming Language
-     for the low-level programming
-    Implemented as a pre-processor that generates C programs
-
-    Nov. 2018. Revised specified with Flex and Bison, Jan 2019
-	Updated to define Hex values
-
-	Jose Garrido
-    Department of Computer Science
-	College of Computing and Software Engineering
-    Kennessaw State University
-
-	Note:
-	The grammar is written in a slightly modified BNF notation (written for Bison/Yacc)
-    The ':' is the same as the right arrow in BNF
-    Every rule ends with a semicolon.
-    The non-terminals are written in upper-case.
-*/
+// A subset of the SCL grammar
 
 start : imports symbols forward_refs specifications globals implementations
       ;

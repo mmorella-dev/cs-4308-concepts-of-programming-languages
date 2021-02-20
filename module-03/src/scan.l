@@ -1,4 +1,12 @@
-/* %option bison-bridge */
+/* FILE: parse.y
+ * AUTHOR: Mae Morella
+ * ===================
+
+ * This file is input for Lex/Flex, to generate a scanner program.
+ * The set of matching rules is defined below, in no particular order.
+
+ * TODO: Implement input switching, more robust string matcher.
+ */
 %option noyywrap
 %option yylineno
 %option caseless
@@ -14,20 +22,17 @@
 
 DIGIT [0-9]
 ALPHA [a-zA-Z]
-ALNUM [0-9a-zA-Z]
 IDENT [0-9a-zA-Z_]
-
-STRING \"(\\.|[^"])*\"
 
 %x BLOCK_COMMENT
 %%
 
-"//".*$                 { /* comment. ignore. */ }
+"//".*$                 { /* line comment. ignore. */ }
 "/*"                    { BEGIN(BLOCK_COMMENT); }
 "description"           { BEGIN (BLOCK_COMMENT); return DESCRIPTION; }
 <BLOCK_COMMENT>"*/"     { BEGIN(INITIAL); }
-<BLOCK_COMMENT>\n       { }
-<BLOCK_COMMENT>.        { }
+<BLOCK_COMMENT>\n       { /* block comment. ignore. */ }
+<BLOCK_COMMENT>.        { /* block comment. ignore. */ }
 
 
 ["<>\[\]\\/\(\)+\-=\.,] return (int)yytext[0];
@@ -86,7 +91,6 @@ close           return MCLOSE;
 endcase         return MENDCASE;
 exit            return MEXIT;
 extern          return MEXTERN;
-equal           return EQUAL;
 false           return MFALSE;
 file            return MFILE;
 open            return MOPEN;
