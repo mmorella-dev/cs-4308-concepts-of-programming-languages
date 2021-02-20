@@ -33,6 +33,8 @@ STRING \"(\\.|[^"])*\"
 ["<>\[\]\\/\(\)+\-=\.,] return (int)yytext[0];
 
 add             return ADD;
+address         return ADDRESS;
+and             return AND;
 alters          return ALTERS;
 array           return ARRAY;
 call            return CALL;
@@ -46,6 +48,7 @@ decrement       return DECREMENT;
 default         return DEFAULT;
 define          return DEFINE;
 definetype      return DEFINETYPE;
+deref           return DEREF;
 display         return DISPLAY;
 displayn        return DISPLAYN;
 do              return DO;
@@ -59,12 +62,14 @@ endif           return ENDIF;
 endrepeat       return ENDREPEAT;
 endwhile        return ENDWHILE;
 enum            return ENUM;
+equal           return EQUAL;
 float           return FLOAT;
 for             return FOR;
 forward         return FORWARD;
 from            return FROM;
 function        return FUNCTION;
 global          return GLOBAL;
+"greater than"  return GREATERT;
 if              return IF;
 implementations return IMPLEMENTATIONS;
 import          return IMPORT;
@@ -74,18 +79,23 @@ integer         return INTEGER;
 interface       return INTERFACE;
 is              return IS;
 length          return LENGTH;
+"less than"     return LESST;
 long            return LONG;
-break          return MBREAK;
-close          return MCLOSE;
-endcase        return MENDCASE;
-exit           return MEXIT;
-extern         return MEXTERN;
+break           return MBREAK;
+close           return MCLOSE;
+endcase         return MENDCASE;
+exit            return MEXIT;
+extern          return MEXTERN;
+equal           return EQUAL;
 false           return MFALSE;
 file            return MFILE;
 open            return MOPEN;
 true            return MTRUE;
 void            return MVOID;
 when            return MWHEN;
+negate          return NEGATE;
+not             return NOT;
+or              return OR;
 of              return OF;
 output          return OUTPUT;
 parameters      return PARAMETERS;
@@ -99,7 +109,7 @@ produces        return PRODUCES;
 read            return READ;
 real            return REAL;
 repeat          return REPEAT;
-return        return RETURN;
+return          return RETURN;
 set             return SET;
 shared          return SHARED;
 short           return SHORT;
@@ -136,6 +146,16 @@ write           return WRITE;
         memmove(yylval.string, yylval.string+1, len-2);
         yylval.string[len-2] = 0;
         return STRING_LITERAL;
+}
+
+\'(\\.|[^'])\' {
+        if (yytext[1] != '\\') {
+        yylval.string[1] = 0;
+                yylval.string[0] = yytext[1];
+        } else {
+                yylval.string[0] = yytext[2];
+        }
+        return LETTER_LITERAL;
 }
 
 {DIGIT}+ {
