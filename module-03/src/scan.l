@@ -96,6 +96,7 @@ short           return SHORT;
 specifications  return SPECIFICATIONS;
 static          return STATIC;
 struct          return STRUCT;
+structures      return STRUCTURES;
 structype       return STRUCTYPE;
 subtract        return SUBTRACT;
 symbol          return SYMBOL;
