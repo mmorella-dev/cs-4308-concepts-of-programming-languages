@@ -24,6 +24,7 @@ STRING \"(\\.|[^"])*\"
 
 "//".*$                 { /* comment. ignore. */ }
 "/*"                    { BEGIN(BLOCK_COMMENT); }
+"description"           { BEGIN (BLOCK_COMMENT); return DESCRIPTION; }
 <BLOCK_COMMENT>"*/"     { BEGIN(INITIAL); }
 <BLOCK_COMMENT>\n       { }
 <BLOCK_COMMENT>.        { }
@@ -45,7 +46,6 @@ decrement       return DECREMENT;
 default         return DEFAULT;
 define          return DEFINE;
 definetype      return DEFINETYPE;
-description     return DESCRIPTION;
 display         return DISPLAY;
 displayn        return DISPLAYN;
 do              return DO;
@@ -99,7 +99,7 @@ produces        return PRODUCES;
 read            return READ;
 real            return REAL;
 repeat          return REPEAT;
-(return)        return RETURN;
+return        return RETURN;
 set             return SET;
 shared          return SHARED;
 short           return SHORT;
@@ -150,7 +150,7 @@ write           return WRITE;
         yylval.number = strtol(yytext, 0, 16);
        return HEX_INT_LITERAL;
 }
-{DIGIT}+\.{DIGIT}? {
+[+-]?{DIGIT}+\.{DIGIT}+ {
         yylval.real = strtod(yytext, 0);
         return FLOAT_LITERAL;
 }
