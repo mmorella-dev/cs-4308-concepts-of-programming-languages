@@ -23,22 +23,25 @@ int main(int argc, char* argv[]) {
 
   int token;  // <- token identifier. declared in "y.tab.h"
   while ((token = yylex()) != 0) {
-    printf("%3d: %-20.20s ", yylineno, yytext);
+    printf("\n%3d\t%-20.20s\t", yylineno, yytext);
     if (token < 256) {
-      printf("found OPERATOR");
+      printf("OPERATOR\t('%s', #%d)", yytext, token);
     } else if (token == IDENTIFIER) {
-      printf("found IDENTIFIER");
-    } else if (token == STRING) {
-      printf("found STRING (%s)", yylval.string);
-    } else if (token == SIGNICON || token == UNSIGNICON || token == HCON) {
-      printf("found integer constant (%d)", yylval.number);
-    } else if (token == FCON) {
-      printf("found float constant (%f)", yylval.real);
+      printf("IDENTIFIER\t('%s')", yylval.string);
+    } else if (token == STRING_LITERAL) {
+      printf("STRING_LITERAL\t(%s)", yylval.string);
+    } else if (token == SIGNED_INT_LITERAL) {
+      printf("SIGNED_INT_LIT\t(%d)", yylval.number);
+    } else if (token == UNSIGNED_INT_LITERAL) {
+      printf("UNSIGNED_INT_LIT\t(%d)", yylval.number);
+    } else if (token == HEX_INT_LITERAL) {
+      printf("HEX_INT_LITERAL\t(%d)", yylval.number);
+    } else if (token == FLOAT_LITERAL) {
+      printf("FLOAT_LITERAL\t(%f)", yylval.real);
     } else {
-      printf("found KEYWORD (%s, #%d)", yytext, token);
+      printf("KEYWORD\t(%s, #%d)", yytext, token);
     }
-    printf("\n");
   }
-
+  printf("\n");
   return EXIT_SUCCESS;
 }
