@@ -31,23 +31,23 @@ int main(int argc, char* argv[]) {
 
   int token;  // <- token identifier. declared in "y.tab.h"
   while ((token = yylex()) != 0) {
-    printf("\n%3d\t%-20.20s\t", yylineno, yytext);
+    printf("\n%3d\t%-20.20s\t%3d ", yylineno, yytext, token);
     if (token < 256) {
-      printf("OPERATOR\t('%s', #%d)", yytext, token);
+      printf("OPERATOR\t\t\'%s\'", yytext);
     } else if (token == IDENTIFIER) {
-      printf("IDENTIFIER\t('%s')", yylval.string);
+      printf("IDENTIFIER\t\t\"%s\"", yylval.string);
     } else if (token == STRING_LITERAL) {
-      printf("STRING_LITERAL\t(%s)", yylval.string);
+      printf("STRING_LITERAL\t%s", yylval.string);
     } else if (token == SIGNED_INT_LITERAL) {
-      printf("SIGNED_INT_LIT\t(%d)", yylval.number);
+      printf("SIGNED_INT_LIT\t%d", yylval.number);
     } else if (token == UNSIGNED_INT_LITERAL) {
-      printf("UNSIGNED_INT_LIT\t(%d)", yylval.number);
+      printf("UNSIGNED_INT_LIT\t%d", yylval.number);
     } else if (token == HEX_INT_LITERAL) {
-      printf("HEX_INT_LITERAL\t(%d)", yylval.number);
+      printf("HEX_INT_LITERAL\t%d", yylval.number);
     } else if (token == FLOAT_LITERAL) {
-      printf("FLOAT_LITERAL\t(%f)", yylval.real);
+      printf("FLOAT_LITERAL\t%f", yylval.real);
     } else {
-      printf("KEYWORD\t(%s, #%d)", yytext, token);
+      printf("keyword\t\t\"%s\"", yytext);
     }
   }
   printf("\n");
