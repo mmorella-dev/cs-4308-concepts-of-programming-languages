@@ -97,7 +97,7 @@ open            return MOPEN;
 true            return MTRUE;
 void            return MVOID;
 when            return MWHEN;
-main            return main
+main            return MAIN;
 negate          return NEGATE;
 not             return NOT;
 or              return OR;
