@@ -1,5 +1,3 @@
-from typing import Optional
-
 import random  # for random
 
 # Define a Course object
@@ -43,14 +41,19 @@ def create_course_list_from_input() -> list[Course]:
     """Generate a list of Course objects from user input."""
     courses: list[Course] = []
     while True:
-        # Create a course object from input
-        c = create_course_from_input()
-        # Invoke a method to change the value of one of its attributes
-        c.student_count = int(random.random() * 100)
-        # Store the object in the array
-        courses.append(c)
-        if not prompt_continue("Continue adding?"):
-            return courses
+        try:
+            # Create a course object from input
+            c = create_course_from_input()
+            # Invoke a method to change the value of one of its attributes
+            c.student_count = int(random.random() * 100)
+            # Store the object in the array
+            courses.append(c)
+            if input("Continue adding? [Yn]") == "n":
+                break
+        except EOFError:
+            print('\n\n')
+            break
+    return courses
 
 
 def print_course_table(courses: list[Course]):
@@ -65,18 +68,6 @@ def print_course_table(courses: list[Course]):
         print(row(c.course_number, c.name, c.section, c.term, c.student_count))
 
 
-def prompt_continue(prompt) -> bool:
-    """Shows a [Yes/no] prompt, and returns True unless an 'n' or EOF is read.
-    """
-    result = ""
-    try:
-        result = input(f"{prompt} [Yn] ")
-    except EOFError:
-        return False
-    finally:
-        return result != 'n'
-
-
+# Main program
 course_list = create_course_list_from_input()
 print_course_table(course_list)
-# Store the object in the array
