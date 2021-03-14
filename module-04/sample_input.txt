@@ -1,0 +1,24 @@
+Algorithm Analysis
+CS 4306
+W03
+Spring 2021
+
+Concepts of Programming Lang
+CS 4308
+W01
+Spring 2021
+
+Internet Programming
+CS 4720
+W02
+Spring 2021
+
+Linear Algebra I
+MATH 3260
+W07
+Spring 2021
+
+Principals of Physics II
+PHYS 2212
+W03
+Spring 2021
