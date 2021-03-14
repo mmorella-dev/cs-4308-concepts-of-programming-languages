@@ -15,6 +15,18 @@ class Course:
         self.term = term
         self.student_count = student_count
 
+    @property
+    def student_count(self):
+        return self.__student_count
+
+    @student_count.setter
+    def student_count(self, count: int):
+        if not isinstance(count, int):
+            raise TypeError("Count must be integer")
+        if count < 0:
+            return ValueError("Count may not be negative")
+        self.__student_count = count
+
 
 def create_course_from_input() -> Course:
     """Requests the corresponding data from input, and creates a course object.
@@ -58,7 +70,7 @@ def prompt_continue(prompt) -> bool:
     """
     result = ""
     try:
-        res = input(f"{prompt} [Yn] ")
+        result = input(f"{prompt} [Yn] ")
     except EOFError:
         return False
     finally:
