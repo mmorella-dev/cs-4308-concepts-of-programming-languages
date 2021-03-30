@@ -180,11 +180,10 @@ write           return WRITE;
         return FLOAT_LITERAL;
 }
 
-
-\n { }
+(" "|\n|.) {}
 
 %%
 
-void yyerror(const char *c) {
-        fprintf(stderr, "Error: %s\n", c);
+void yyerror(const char *msg) {
+        fprintf(stderr, "line %d `%s`: %s\n", yylineno, yytext,  msg);
 }
