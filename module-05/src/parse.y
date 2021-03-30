@@ -9,9 +9,14 @@
 // has several issues and is not yet ready for use in parsing source files.
 
 %{
+#include <stdio.h>
 void yyerror(char* msg);
 
 int yylex();
+
+int yylineno;
+
+#define YYERROR_VERBOSE
 
 %}
 
@@ -32,27 +37,29 @@ int yylex();
 %token <number> UNSIGNED_INT_LITERAL SIGNED_INT_LITERAL HEX_INT_LITERAL
 %token <real> FLOAT_LITERAL
 %token <string> IDENTIFIER LETTER_LITERAL
+%type <string> fname
 
 %%
 // A subset of the SCL grammar
 
-start : imports symbols forward_refs specifications globals implementations
+start   : imports symbols forward_refs specifications globals implementations
+        | pactions
       ;
 imports :
         | imports import_file
         ;
-import_file : IMPORT header_file_name
-            | USE header_file_name
+import_file : IMPORT header_file_name   { printf("%3d: Import: %s\n", yylineno, yylval.string ); }
+            | USE header_file_name      { printf("%3d Use: %s\n", yylineno, yylval.string ); }
             ;
-header_file_name : LANGB fname RANGB
+header_file_name: '<' fname '>'
                  /* | QUOTES fname QUOTES; */
                  | STRING_LITERAL;
 
 fname : IDENTIFIER
       | fname slash IDENTIFIER
       ;
-slash : FSLASH
-       | BSLASH
+slash : '/'
+       | '\\'
        ;
 symbols :
         | symbols symbol_def
@@ -68,7 +75,7 @@ symbol_value : IDENTIFIER
              | FLOAT_LITERAL
              ;
 forward_refs :
-             | FORWARD forward_list
+             | FORWARD DECLARATIONS forward_list
              ;
 forward_list : forwards
              | forward_list forwards
@@ -93,8 +100,9 @@ chk_ptr :
 chk_array :
           | ARRAY array_dim_list
           ;
-array_dim_list : LB array_index RB
-               | array_dim_list LB array_index RB
+array_dim_list : '[' ']'
+               | '[' array_index ']'
+               | array_dim_list '[' array_index ']'
                ;
 array_index : IDENTIFIER
             | UNSIGNED_INT_LITERAL
@@ -127,7 +135,7 @@ spec_list : spec_def
           ;
 spec_def : ENUM
          | STRUCT
-		 | DESCRIPTION
+         | DESCRIPTION
          ;
 globals :
         | GLOBAL  DECLARATIONS const_dec var_dec struct_dec
@@ -142,74 +150,74 @@ var_dec : VARIABLES data_declarations
 struct_dec :
            | STRUCTURES data_declarations
            ;
-data_declarations : comp_declare
-                  | data_declarations comp_declare
-				  ;
+data_declarations       : comp_declare
+                        | data_declarations comp_declare
+		        ;
 comp_declare : DEFINE data_file
              ;
-data_file : sel_file
-          | sel_dmode data_declaration
-          ;
-sel_dmode :
-          | PERSISTENT
-          | SHARED
-          | STATIC
-          | MEXTERN
-          ;
-sel_file :
-         | MFILE
-         ;
-data_declaration : IDENTIFIER opt_pointer parray_dec OF data_type
+data_file       : sel_file
+                | sel_dmode data_declaration
+                ;
+sel_dmode       :
+                | PERSISTENT
+                | SHARED
+                | STATIC
+                | MEXTERN
+                ;
+sel_file        :
+                | MFILE
+                ;
+data_declaration : IDENTIFIER opt_pointer parray_dec OF TYPE data_type
+                { printf("%3d: Declare: %s\n", yylineno, yylval.string ); }
                  ;
-opt_pointer :
-            | POINTER
-            ;
-data_type : TUNSIGNED
-          | CHAR
-		  | INTEGER
-		  | MVOID
-		  | DOUBLE
-		  | LONG
-		  | SHORT
-		  | FLOAT
-		  | REAL
-		  | TSTRING
-		  | TBOOL
-		  | TBYTE
-		  ;
-parray_dec :
-          | ARRAY plist_const popt_array_val
-		  | LB
-		  | VALUE
-		  | EQUOP
-		  ;
-plist_const : LB iconst_ident RB
-            | plist_const LB iconst_ident RB
+opt_pointer     :
+                | POINTER
+                ;
+data_type       : TUNSIGNED
+                | CHAR
+                | INTEGER
+                | MVOID
+                | DOUBLE
+                | LONG
+                | SHORT
+                | FLOAT
+                | REAL
+                | TSTRING
+                | TBOOL
+                | TBYTE
+                ;
+parray_dec      :
+                | '='
+                | ARRAY plist_const popt_array_val
+                | '[' ']'
+                | VALUE
+                ;
+plist_const : '[' iconst_ident ']'
+            | plist_const '[' iconst_ident ']'
             ;
 iconst_ident : SIGNED_INT_LITERAL
              | UNSIGNED_INT_LITERAL
              | IDENTIFIER
-			 ;
+             ;
 popt_array_val :
                | value_eq array_val
                ;
 value_eq : VALUE
-         | EQUOP
+         | '='
          ;
 
 array_val : simp_arr_val
           ;
-simp_arr_val : LB arg_list RB
+simp_arr_val : '[' arg_list ']'
              ;
-arg_list : expr
-         | arg_list COMMA expr
-		 ;
+arg_list : arg_list ',' expr | expr
+	 ;
 
-implementations : IMPLEMENTATIONS main_head funct_list
+implementations : IMPLEMENTATIONS funct_list
           ;
-main_head :
-          |  MAIN DESCRIPTION parameters
-          ;
+
+desc    :
+        | DESCRIPTION;
 funct_list : funct_body
            | funct_list funct_body
            ;
@@ -217,13 +225,16 @@ funct_body: FUNCTION phead_fun pother_oper_def
           ;
 phead_fun :
           | PERSISTENT
-	      | STATIC
+                | STATIC
 	      ;
 pother_oper_def : pother_oper IS const_var_struct precond
-                      PBEGIN pactions  ENDFUN  IDENTIFIER
+                      PBEGIN pactions ENDFUN IDENTIFIER
+                | pother_oper IS const_var_struct precond
+                      PBEGIN pactions ENDFUN MAIN
                 ;
 
-pother_oper : IDENTIFIER DESCRIPTION oper_type parameters
+pother_oper : IDENTIFIER desc oper_type parameters
+            | MAIN desc
             ;
 
 precond :
@@ -236,9 +247,9 @@ pcondition : pcond1 OR pcond1
 pcond1 : NOT pcond2
        | pcond2
        ;
-pcond2  : LP pcondition RP
+pcond2  : '(' pcondition ')'
         /* | expr RELOP expr */
-        | expr RELOP expr
+        | expr '=' '=' expr
         | expr eq_v expr
         | expr opt_not true_false
         | element;
@@ -261,7 +272,7 @@ parameters :
            ;
 
 param_list : param_def
-           | param_list COMMA param_def
+           | param_list ',' param_def
            ;
 param_def : param_mode data_declaration
           ;
@@ -274,25 +285,25 @@ param_mode :
 
 
 
-expr : term PLUS term
-     | term MINUS term
-	 | term BAND term
-	 | term BOR term
-	 | term BXOR term
-	 ;
-term : punary
-     | punary STAR punary
-     | punary DIVOP punary
-     | punary MOD punary
-	 | punary LSHIFT punary
-	 | punary RSHIFT punary
-	 ;
-punary : element
-                | ADDRESS element
-                | DEREF element
-                /* | MINUS element */
-                | NEGATE element
-                ;
+expr    : term '+' term
+        | term '-' term
+        | term '&' term
+        | term '|' term
+        | term '^' '^' term
+        | term
+	;
+term    : punary '*' punary
+        | punary '/' punary
+        | punary '%' punary
+        | punary '<' '<' punary
+	| punary '>' '>' punary
+        | punary
+	;
+punary  : element
+        | ADDRESS element
+        | DEREF element
+        | NEGATE element
+        ;
 element         : IDENTIFIER popt_ref
 	        | STRING_LITERAL
 		| LETTER_LITERAL
@@ -302,17 +313,18 @@ element         : IDENTIFIER popt_ref
 		| FLOAT_LITERAL
 		| MTRUE
 		| MFALSE
-		| LP expr RP
+		| '(' expr ')'
 		;
-pactions        : action_def
-                | pactions action_def
+pactions        : pactions action_def
+                | action_def
                 ;
 action_def      : ADD name_ref TO name_ref
                 | SUBTRACT name_ref FROM name_ref
-                | SET name_ref EQUOP expr
+                | SET name_ref '=' expr
                 | READ pvar_value_list
                 | INPUT name_ref
                 | DISPLAY pvar_value_list
+                { printf("%3d: Display: %s\n", yylineno, yylval.string ); }
                 | DISPLAYN pvar_value_list
                 | MCLOSE IDENTIFIER
                 | MOPEN in_out
@@ -323,7 +335,7 @@ action_def      : ADD name_ref TO name_ref
                 | CALL name_ref pusing_ref
                 | IF pcondition THEN pactions ptest_elsif
                         opt_else ENDIF
-                | FOR name_ref EQUOP expr downto expr
+                | FOR name_ref '=' expr downto expr
                         DO pactions ENDFOR
                 | REPEAT pactions UNTIL pcondition ENDREPEAT
                 | WHILE pcondition DO pactions ENDWHILE
@@ -335,7 +347,7 @@ action_def      : ADD name_ref TO name_ref
                 ;
 ptest_elsif :
             | proc_elseif
-			;
+	    ;
 proc_elseif : ELSEIF pcondition THEN pactions
             | proc_elseif ELSEIF pcondition THEN pactions
             ;
@@ -346,19 +358,18 @@ pusing_ref :
            | USING arg_list
            | parguments
 		   ;
-parguments : LP arg_list RP
+parguments : '(' arg_list ')'
            ;
 
 
-pcase_val : MWHEN expr COLON pactions
-          | pcase_val MWHEN expr COLON pactions
+pcase_val : MWHEN expr ':' pactions
+          | pcase_val MWHEN expr ':' pactions
           ;
 pcase_def :
-          | DEFAULT COLON pactions
+          | DEFAULT ':' pactions
           ;
-pvar_value_list : expr
-                | pvar_value_list COMMA expr
-                ;
+pvar_value_list :  expr | pvar_value_list ',' expr;
+
 opt_else :
          | ELSE pactions
          ;
@@ -376,55 +387,21 @@ pmember_opt :
             | pmember_of
             ;
 pmember_of : OF IDENTIFIER opt_ref
-		   | pmember_of OF IDENTIFIER opt_ref
+	   | pmember_of OF IDENTIFIER opt_ref
            ;
 
-opt_ref : array_val
+opt_ref :
+        | '[' UNSIGNED_INT_LITERAL ']'
         ;
 popt_ref :
          | array_val
-		 | parguments
-		 ;
+	 | parguments
+         ;
 popt_dot :
          | proc_dot
-		 ;
-proc_dot : DOT IDENTIFIER opt_ref
-         | proc_dot DOT IDENTIFIER opt_ref
+	 ;
+proc_dot : '.' IDENTIFIER opt_ref
+         | proc_dot '.' IDENTIFIER opt_ref
          ;
-
-
-
 // Operator definitions
-
-COMMA : ',';
-DOT : '.';
-LANGB : '<'; // left angle bracket
-RANGB : '>'; // right angle bracket
-LP: '(';        // left parenthesis
-RP: ')';        // right parenthesis
-LB: '[';        // left bracket
-RB: ']';        // right bracket
-QUOTES : '"';
-FSLASH : '/';   // forward slash
-BSLASH : '\\';  // back slash
-
-EQUOP : '=';    // equals
-BAND : '&'; // bitwise and
-RELOP : '&' '&';
-/* OR : '|' '|'; */
-/* NOT : '!'; */
-COLON : ':';
-
-PLUS : '+';
-MINUS : '-';
-STAR : '*';
-DIVOP : '/';
-MOD : '%';
-LSHIFT : '<' '<';
-RSHIFT : '>' '>';
-/* ADDRESS : '&' */
-/* DEREF : '*' */
-/* NEGATE : '-'; */
-BXOR : '^'; // bitwise xor
-BOR  : '|'; // bitwise or
 %%
