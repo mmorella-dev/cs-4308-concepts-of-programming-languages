@@ -228,13 +228,13 @@ phead_fun :
                 | STATIC
 	      ;
 pother_oper_def : pother_oper IS const_var_struct precond
-                      PBEGIN pactions ENDFUN IDENTIFIER
+                      PBEGIN pactions ENDFUN IDENTIFIER { printf("%3d: End function %s:\n", yylineno, yylval.string ); }
                 | pother_oper IS const_var_struct precond
-                      PBEGIN pactions ENDFUN MAIN
+                      PBEGIN pactions ENDFUN MAIN { printf("%3d: End function main.\n", yylineno ); }
                 ;
 
-pother_oper : IDENTIFIER desc oper_type parameters
-            | MAIN desc
+pother_oper : IDENTIFIER desc oper_type parameters   { printf("%3d: Function %s:\n", yylineno, yylval.string ); }
+            | MAIN desc   { printf("%3d: Function main:\n", yylineno ); }
             ;
 
 precond :
@@ -320,7 +320,7 @@ pactions        : pactions action_def
                 ;
 action_def      : ADD name_ref TO name_ref
                 | SUBTRACT name_ref FROM name_ref
-                | SET name_ref '=' expr
+                | SET name_ref { printf("%3d: Set %s", yylineno, yylval.string ); } '=' expr { printf(" equal to %f\n", yylval.real ); }
                 | READ pvar_value_list
                 | INPUT name_ref
                 | DISPLAY pvar_value_list
@@ -341,7 +341,7 @@ action_def      : ADD name_ref TO name_ref
                 | WHILE pcondition DO pactions ENDWHILE
                 | CASE name_ref pcase_val pcase_def MENDCASE
                 | MBREAK
-                | MEXIT
+                | MEXIT  { printf("%3d: Exit\n", yylineno ); }
                 | ENDFUN name_ref
                 | POSTCONDITION pcondition
                 ;
