@@ -9,26 +9,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int yyparse(void);
+
 #include "scan.yy.h"  // generated from scan.l by Lex/Flex
 #include "y.tab.h"    // generated from parse.y by Yacc/Bison
 
-YYSTYPE yylval;
-// declare yylval here, since we're not compiling the Yacc output
-
-int main(int argc, char* argv[]) {
-  // Check that the program has exactly one argument:
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s [file_name]\n", argv[0]);
-    return EXIT_FAILURE;
-  }
-  // Open input file from args
-  FILE* file = fopen(argv[1], "r");
-  if (!file) {
-    fprintf(stderr, "Error: could not read from %s\n", argv[1]);
-  }
-  // Set Lex input stream to file
-  yyin = file;
-
+int scanner_main() {
   int token;  // <- token identifier. declared in "y.tab.h"
   while ((token = yylex()) != 0) {
     printf("\n%3d\t%-20.20s\t%3d ", yylineno, yytext, token);
@@ -52,4 +38,30 @@ int main(int argc, char* argv[]) {
   }
   printf("\n");
   return EXIT_SUCCESS;
+}
+
+int sclarse_main() {
+  yyparse();
+  return EXIT_SUCCESS;
+}
+
+int main(int argc, char* argv[]) {
+  // Check that the program has exactly one argument:
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s [file_name]\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+  // Open input file from args
+  if (strcmp(argv[1], "-") == 0) {
+    yyin = stdin;
+  } else {
+    yyin = fopen(argv[1], "r");
+  }
+  if (!yyin) {
+    fprintf(stderr, "Error: could not read from %s\n", argv[1]);
+    exit(1);
+  }
+  //
+  sclarse_main();
+  fclose(yyin);
 }
