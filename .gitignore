@@ -7,3 +7,8 @@ y.**.*
 **.o
 module-03/sclanner
 **out/
+*.stderr
+*.stdout
+*.ali
+*.bexch
+b__*.*

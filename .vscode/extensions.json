@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "daohong-emilio.yash",
-    "ms-vscode.cpptools"
+    "ms-vscode.cpptools",
+    "adacore.ada"
   ]
 }
