@@ -1,6 +1,8 @@
+-- FILE: oedipus-elementary_functions.adb LICENSE: MIT © 2021 Mae Morella
+
 with Oedipus; use Oedipus;
 
-package body Oedipus.Elementary_Operations is
+package body Oedipus.Elementary_Functions is
 
    function "+" (C1, C2 : in Complex) return Complex is
       Sum : Complex :=
@@ -40,7 +42,7 @@ package body Oedipus.Elementary_Operations is
    end "*";
 
    function Reciprocal (C : in Complex) return Complex is
-      Denom : Long_Float :=
+      Denom : Float :=
         Get_Real (C) * Get_Real (C) + Get_Imaginary (C) * Get_Imaginary (C);
       Recip : Complex :=
         Create_Complex
@@ -57,4 +59,4 @@ package body Oedipus.Elementary_Operations is
       return C1 * Reciprocal (C2);
    end "/";
 
-end Oedipus.Elementary_Operations;
+end Oedipus.Elementary_Functions;

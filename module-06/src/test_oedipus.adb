@@ -1,7 +1,10 @@
-with Oedipus, Oedipus.Math, Oedipus.Complex_Text_IO, Ada.Text_IO, Ada
-  .Long_Float_Text_IO, Ada.Exceptions;
-use Oedipus, Oedipus.Math, Oedipus.Complex_Text_IO, Ada.Text_IO,
-  Ada.Long_Float_Text_IO, Ada.Exceptions;
+-- FILE: test_oedipus.adb
+-- LICENSE: MIT © 2021 Mae Morella
+
+with Oedipus, Oedipus.Elementary_Functions, Oedipus.Complex_Text_IO, Ada
+  .Text_IO, Ada.Float_Text_IO, Ada.Exceptions;
+use Oedipus, Oedipus.Elementary_Functions, Oedipus.Complex_Text_IO,
+  Ada.Text_IO, Ada.Float_Text_IO, Ada.Exceptions;
 
 procedure Test_Oedipus is
    U : Complex;

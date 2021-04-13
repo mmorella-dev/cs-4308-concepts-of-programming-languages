@@ -1,6 +1,8 @@
+-- FILE: oedipus-elementary_functions.ads LICENSE: MIT © 2021 Mae Morella
+
 with Oedipus; use Oedipus;
 
-package Oedipus.Elementary_Operations is
+package Oedipus.Elementary_Functions is
    Div_By_Zero : exception;
 
    function "+" (C : in Complex) return Complex;
@@ -27,4 +29,4 @@ package Oedipus.Elementary_Operations is
    -- PRECOND: C2 is not 0+0i. POSTCOND: quotient of C1 & C2 is returned
    -- exceptions: Div_By_Zero is raised if precondition fails
 
-end Oedipus.Elementary_Operations;
+end Oedipus.Elementary_Functions;

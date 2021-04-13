@@ -1,3 +1,5 @@
+-- FILE: oedipus-complex_text_io.ads LICENSE: MIT © 2021 Mae Morella
+
 with Oedipus, Ada.Text_IO;
 use Oedipus, Ada.Text_IO;
 

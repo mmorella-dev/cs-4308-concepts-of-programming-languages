@@ -1,5 +1,7 @@
-with Oedipus, Ada.Long_Float_Text_IO, Ada.Text_IO;
-use Oedipus, Ada.Long_Float_Text_IO, Ada.Text_IO;
+-- FILE: oedipus-complex_text_io.adb LICENSE: MIT © 2021 Mae Morella
+
+with Oedipus, Ada.Float_Text_IO, Ada.Text_IO;
+use Oedipus, Ada.Float_Text_IO, Ada.Text_IO;
 
 package body Oedipus.Complex_Text_IO is
 
@@ -17,8 +19,8 @@ package body Oedipus.Complex_Text_IO is
    end Put;
 
    procedure Get (Item : out Complex) is
-      A : Long_Float;
-      B : Long_Float;
+      A : Float;
+      B : Float;
    begin
       Put ("Enter real component: ");
       Get (A);
