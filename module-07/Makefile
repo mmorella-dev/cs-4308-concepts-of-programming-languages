@@ -9,7 +9,7 @@ YFLAGS  = -d
 OUT_DIR = ./out
 SRC_DIR = ./src
 
-TARGET = $(OUT_DIR)/sclarse
+TARGET = $(OUT_DIR)/screpl
 
 objects := $(OUT_DIR)/scan.yy.o $(OUT_DIR)/main.o $(SRC_DIR)/y.tab.c
 

@@ -1,6 +1,6 @@
-# SCLarse
+# SCREPL
 
-A half-arsed syntax tree generator for the SCL programming language.
+A barely functioning interpreter for the SCL programming language.
 
 Created as part of a project for CS 4308 Concepts of Programming Languages.
 
@@ -13,7 +13,7 @@ Clone this repository, and execute `make`. This should generate the binary at `o
 ## Usage
 
 ```sh
-$ sclarse input.scl
+$ screpl input.scl
 # output TBD
 ```
 
