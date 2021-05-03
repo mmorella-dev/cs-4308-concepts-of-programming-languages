@@ -1,20 +1,17 @@
-// FILE: parse.y
+// FILE: transpile.y
 // AUTHOR: Mae Morella
 // ===================
-//
-// This file is input for Yacc/Bison, to generate a parser program.
-// It is currently used only to define y.tab.h, which #defines
-// values for all of the following tokens.
-// It contains a BNF grammar for the SCL language as well, but this grammar
-// has several issues and is not yet ready for use in parsing source files.
 
 %{
 #include <stdio.h>
+
 void yyerror(char* msg);
 
 int yylex();
 
 int yylineno;
+
+FILE* OUTFILE;
 
 #define YYERROR_VERBOSE
 
@@ -48,8 +45,8 @@ start   : imports symbols forward_refs specifications globals implementations
 imports :
         | imports import_file
         ;
-import_file : IMPORT header_file_name   { printf("%3d: Import: %s\n", yylineno, yylval.string ); }
-            | USE header_file_name      { printf("%3d Use: %s\n", yylineno, yylval.string ); }
+import_file : IMPORT header_file_name   { fprintf(OUTFILE, "// import %s;\n", yylval.string ); }
+            | USE header_file_name      { fprintf(OUTFILE, "// import %s;\n", yylval.string ); }
             ;
 header_file_name: '<' fname '>'
                  /* | QUOTES fname QUOTES; */
@@ -168,7 +165,7 @@ sel_file        :
                 | MFILE
                 ;
 data_declaration : IDENTIFIER opt_pointer parray_dec OF TYPE data_type
-                { printf("%3d: Declare: %s\n", yylineno, yylval.string ); }
+                { fprintf(OUTFILE, "let %s;\n", yylval.string ); }
                  ;
 opt_pointer     :
                 | POINTER
@@ -228,13 +225,13 @@ phead_fun :
                 | STATIC
 	      ;
 pother_oper_def : pother_oper IS const_var_struct precond
-                      PBEGIN pactions ENDFUN IDENTIFIER { printf("%3d: End function %s:\n", yylineno, yylval.string ); }
+                      PBEGIN pactions ENDFUN IDENTIFIER { fprintf(OUTFILE, "}\n"); }
                 | pother_oper IS const_var_struct precond
-                      PBEGIN pactions ENDFUN MAIN { printf("%3d: End function main.\n", yylineno ); }
+                      PBEGIN pactions ENDFUN MAIN { fprintf(OUTFILE, "}\nmain();\n"); }
                 ;
 
-pother_oper : IDENTIFIER desc oper_type parameters   { printf("%3d: Function %s:\n", yylineno, yylval.string ); }
-            | MAIN desc   { printf("%3d: Function main:\n", yylineno ); }
+pother_oper : IDENTIFIER desc oper_type parameters   { fprintf(OUTFILE, "function %s() {\n", yylval.string ); }
+            | MAIN desc   { fprintf(OUTFILE, "function main() {\n"); }
             ;
 
 precond :
@@ -320,11 +317,11 @@ pactions        : pactions action_def
                 ;
 action_def      : ADD name_ref TO name_ref
                 | SUBTRACT name_ref FROM name_ref
-                | SET name_ref { printf("%3d: Set %s", yylineno, yylval.string ); } '=' expr { printf(" equal to %f\n", yylval.real ); }
+                | SET name_ref { fprintf(OUTFILE, "%s", yylval.string); } '=' expr { fprintf(OUTFILE, " = %f;\n", yylval.real ); }
                 | READ pvar_value_list
                 | INPUT name_ref
                 | DISPLAY pvar_value_list
-                { printf("%3d: Display: %s\n", yylineno, yylval.string ); }
+                { fprintf(OUTFILE, "console.log(%s);\n", yylval.string ); }
                 | DISPLAYN pvar_value_list
                 | MCLOSE IDENTIFIER
                 | MOPEN in_out
@@ -341,8 +338,7 @@ action_def      : ADD name_ref TO name_ref
                 | WHILE pcondition DO pactions ENDWHILE
                 | CASE name_ref pcase_val pcase_def MENDCASE
                 | MBREAK
-                | MEXIT  { printf("%3d: Exit\n", yylineno ); }
-                | ENDFUN name_ref
+                | MEXIT  { fprintf(OUTFILE, "process.exit(0)\n"); }
                 | POSTCONDITION pcondition
                 ;
 ptest_elsif :
@@ -403,5 +399,3 @@ popt_dot :
 proc_dot : '.' IDENTIFIER opt_ref
          | proc_dot '.' IDENTIFIER opt_ref
          ;
-// Operator definitions
-%%

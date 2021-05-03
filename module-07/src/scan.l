@@ -1,4 +1,4 @@
-/* FILE: parse.y
+/* FILE: scan.l
  * AUTHOR: Mae Morella
  * ===================
 
@@ -147,9 +147,6 @@ write           return WRITE;
 
 \"(\\.|[^"])*\" {
         strcpy(yylval.string, yytext);
-        size_t len = strlen(yylval.string);
-        memmove(yylval.string, yylval.string+1, len-2);
-        yylval.string[len-2] = 0;
         return STRING_LITERAL;
 }
 

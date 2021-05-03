@@ -1,5 +1,5 @@
-# Makefile example -- scanner and parser.
-# Creates "main" from "scan.l", "parse.y", and "main.c"
+# Makefile example -- scanner and transpiler.
+# Creates "main" from "scan.l", "transpile.y", and "main.c"
 #
 # LEX     = flex
 # YACC    = bison -y
@@ -17,7 +17,7 @@ $(TARGET): $(objects)
 		$(MKDIR_P) $(OUT_DIR)
 		$(CC) -o $@ $(objects)
 
-$(SRC_DIR)/y.tab.c: $(SRC_DIR)/parse.y
+$(SRC_DIR)/y.tab.c: $(SRC_DIR)/transpile.y
 		$(MKDIR_P) $(dir $@)
 		$(YACC) $(YFLAGS) -o "$@" $<
 

@@ -8,37 +8,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-int yyparse(void);
+#include <unistd.h>
 
 #include "scan.yy.h"  // generated from scan.l by Lex/Flex
 #include "y.tab.h"    // generated from parse.y by Yacc/Bison
 
-int scanner_main() {
-  int token;  // <- token identifier. declared in "y.tab.h"
-  while ((token = yylex()) != 0) {
-    printf("\n%3d\t%-20.20s\t%3d ", yylineno, yytext, token);
-    if (token < 256) {
-      printf("OPERATOR\t\t\'%s\'", yytext);
-    } else if (token == IDENTIFIER) {
-      printf("IDENTIFIER\t\t\"%s\"", yylval.string);
-    } else if (token == STRING_LITERAL) {
-      printf("STRING_LITERAL\t%s", yylval.string);
-    } else if (token == SIGNED_INT_LITERAL) {
-      printf("SIGNED_INT_LIT\t%d", yylval.number);
-    } else if (token == UNSIGNED_INT_LITERAL) {
-      printf("UNSIGNED_INT_LIT\t%d", yylval.number);
-    } else if (token == HEX_INT_LITERAL) {
-      printf("HEX_INT_LITERAL\t%d", yylval.number);
-    } else if (token == FLOAT_LITERAL) {
-      printf("FLOAT_LITERAL\t%f", yylval.real);
-    } else {
-      printf("keyword\t\t\"%s\"", yytext);
-    }
-  }
-  printf("\n");
-  return EXIT_SUCCESS;
-}
+FILE* OUTFILE;
+
+int yyparse(void);
 
 int sclarse_main() {
   yyparse();
@@ -51,6 +28,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "Usage: %s [file_name]\n", argv[0]);
     return EXIT_FAILURE;
   }
+  OUTFILE = stdout;
   // Open input file from args
   if (strcmp(argv[1], "-") == 0) {
     yyin = stdin;

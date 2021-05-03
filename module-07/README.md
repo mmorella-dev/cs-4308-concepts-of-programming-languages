@@ -13,7 +13,7 @@ Clone this repository, and execute `make`. This should generate the binary at `o
 ## Usage
 
 ```sh
-$ screpl input.scl
+$ screpl input.scl | node -
 # output TBD
 ```
 
